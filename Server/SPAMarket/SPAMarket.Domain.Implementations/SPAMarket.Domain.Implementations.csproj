@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SPAMarket.DAL.Implementations\SPAMarket.DAL.Implementations.csproj" />
+    <ProjectReference Include="..\SPAMarket.Domain.Contracts\SPAMarket.Domain.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

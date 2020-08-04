@@ -1,0 +1,11 @@
+{
+  "name": "spamarket",
+  "version": "1.0.0",
+  "description": "frontend of market",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ice_cookie",
+  "license": "ISC"
+}
