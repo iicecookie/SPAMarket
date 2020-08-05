@@ -6,10 +6,21 @@ class Api {
     this.url = config.url;
   }
 
-  async products() {
+  async getAllProducts() {
     try {
       const responce = await axios.get(`${this.url}/products`);
       console.log(responce);
+    } catch (err) {
+      console.log(err);
+      return Promise.reject(err);
+    }
+  }
+
+  async createProduct(product) {
+    try {
+      const responce = await axios.post(`${this.url}/products`, {
+        product: product,
+      });
     } catch (err) {
       console.log(err);
       return Promise.reject(err);
