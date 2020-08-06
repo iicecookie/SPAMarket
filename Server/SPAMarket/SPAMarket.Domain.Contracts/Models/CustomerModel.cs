@@ -11,6 +11,10 @@ namespace SPAMarket.Domain.Contracts.Models
         public string Address  { get; set; }
         public byte   Discount { get; set; }
 
+
+        public string Login { get; set; }
+        public string HashedPassword { get; set; }
+
         public List<OrderModel> Orders { get; set; }
     }
 }
