@@ -38,6 +38,7 @@ namespace SPAMarket.Domain.Implementations.Services
             return model;
         }
 
+        // Заказчик просматривает все имеющиеся товары  
         public List<ProductModel> GetAll()
         {
             var collection = _dbRepository.GetAll<ProductEntity>();

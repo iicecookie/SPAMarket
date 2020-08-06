@@ -58,6 +58,7 @@ namespace SPAMarket.Web.Controllers
             return Ok(collection);
         }
     
+
         [HttpPut]
         public async Task<ActionResult> Update(ProductModel model)
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -19,9 +20,9 @@ namespace SPAMarket.Web.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<ActionResult<Guid>> Create(OrderModel order)
+        public async Task<ActionResult<Guid>> Create(List<OrderItemModel> orderItems)
         {
-            var result = await _orderService.Create(order);
+            var result = await _orderService.Create(orderItems);
 
             if (result == Guid.Empty)
             {
@@ -55,6 +56,18 @@ namespace SPAMarket.Web.Controllers
             }
 
             return Ok(order);
+        }
+
+        [HttpDelete("id")]
+        public async Task<ActionResult> Delete(Guid id)
+        {
+            var result = await _orderService.Delete(id);
+
+            if (result)
+            {
+                return Ok();
+            }
+            return NotFound(); // если статус в процессе - удалить нельзя
         }
     }
 }

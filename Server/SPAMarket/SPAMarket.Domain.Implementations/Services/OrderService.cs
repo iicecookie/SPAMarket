@@ -22,10 +22,21 @@ namespace SPAMarket.Domain.Implementations.Services
             _mapper = mapper;
         }
 
-        public async Task<Guid> Create(OrderModel order)
+        public async Task<Guid> Create(List<OrderItemModel> orderItems)
         {
-            var entity = _mapper.Map<OrderEntity>(order);
-            var result = await _dbRepository.Add(entity);
+            var entity = _mapper.Map<List<OrderItemEntity>>(orderItems);
+            await _dbRepository.AddRange(entity);
+
+            var order = new OrderModel()
+            {
+                Status = "New",
+                OrderItems = orderItems,
+                CustomerId = Guid.NewGuid(), // TODO:
+                OrderNumber = _dbRepository.GetAll<OrderEntity>().Count(),
+                OrderDate = DateTime.Now,
+            };
+
+            var result = await _dbRepository.Add(_mapper.Map<OrderEntity>(order));
 
             return result;  
         }
@@ -46,15 +57,26 @@ namespace SPAMarket.Domain.Implementations.Services
             return models;
         }
 
-        public Task<Guid> Update(OrderModel product)
+        public async Task<Guid> Update(OrderModel order)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<OrderEntity>(order);
+
+            await _dbRepository.Update(entity);
+            await _dbRepository.SaveChangesAsync();
+
+            return entity.Id;
         }
 
-        public async Task Delete(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
-            await _dbRepository.Delete<ProductEntity>(id);
-            await _dbRepository.SaveChangesAsync();
+            var model = Get(id);
+            if (model.Status != "In progress")
+            {
+                await _dbRepository.Delete<ProductEntity>(id);
+                await _dbRepository.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
     }
 }

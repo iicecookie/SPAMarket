@@ -59,7 +59,6 @@ namespace SPAMarket
             services.AddScoped<IDbRepository, DbRepository>();
             
             services.AddTransient<ICustomerService,  CustomerService>();
-            services.AddTransient<IOrderItemService, OrderItemService>();
             services.AddTransient<IOrderService,     OrderService>();
             services.AddTransient<IProductService,   ProductService>();
 
