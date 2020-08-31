@@ -7,22 +7,22 @@ using SPAMarket.DAL.Contracts.Entities;
 
 namespace SPAMarket.DAL.Contracts
 {
-    public interface IDbRepository
+    public interface IDbRepository<T> where T : class, IEntity
     {
-        IQueryable<T> Get<T>(Expression<Func<T, bool>> selector) where T : class, IEntity;
-        IQueryable<T> Get<T>()    where T : class, IEntity;
-        IQueryable<T> GetAll<T>() where T : class, IEntity;
+        IQueryable<T> Get(Expression<Func<T, bool>> selector);
+        IQueryable<T> Get();
+        IQueryable<T> GetAll();
 
-        Task<Guid> Add<T>(T newEntity) where T : class, IEntity;
-        Task  AddRange<T>(IEnumerable<T> newEntities) where T : class, IEntity;
+        Task<Guid> Add(T newEntity);
+        Task  AddRange(IEnumerable<T> newEntities);
 
-        Task Delete<T>(Guid entity) where T : class, IEntity;
+        Task Delete(Guid id);
 
-        Task Remove<T>(T entity) where T : class, IEntity;
-        Task RemoveRange<T>(IEnumerable<T> entities) where T : class, IEntity;
+        Task Remove(T entity);
+        Task RemoveRange(IEnumerable<T> entities);
 
-        Task Update<T>(T entity) where T : class, IEntity;
-        Task UpdateRange<T>(IEnumerable<T> entities) where T : class, IEntity;
+        Task Update(T entity);
+        Task UpdateRange(IEnumerable<T> entities);
             
         Task<int> SaveChangesAsync();
     }

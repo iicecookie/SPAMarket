@@ -24,9 +24,6 @@ namespace SPAMarket.Web.Profiles
             CreateMap<ProductModel, ProductEntity>();
             CreateMap<ProductEntity, ProductModel>();
 
-            CreateMap<UserModel, UserEntity>();
-            CreateMap<UserEntity, UserModel>();
-
             CreateMap<List<ProductModel>, List<ProductEntity>>();
             CreateMap<List<ProductEntity>, List<ProductModel>>();
 

@@ -1,22 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using SPAMarket.DAL.Contracts.Entities;
-using SPAMarket.DAL.Contracts;
 using SPAMarket.Domain.Contracts;
 using SPAMarket.Domain.Contracts.Models;
+using SPAMarket.DAL.Implementations.SpecificRepositoryes;
 
 namespace SPAMarket.Domain.Implementations.Services
 {
     public class CustomerService : ICustomerService
     {
-        private readonly IDbRepository _dbRepository;
+        private readonly CustomerRepository _dbRepository;
         private readonly IMapper _mapper;
 
-        public CustomerService(IDbRepository dbRepository, IMapper mapper)
+        public CustomerService(CustomerRepository dbRepository, IMapper mapper)
         {
             _dbRepository = dbRepository;
             _mapper = mapper;
@@ -34,7 +32,7 @@ namespace SPAMarket.Domain.Implementations.Services
 
         public async Task<CustomerModel> Get(Guid id)
         {
-            var entity = await _dbRepository.Get<CustomerEntity>().FirstOrDefaultAsync(x => x.Id == id);
+            var entity = await _dbRepository.Get().FirstOrDefaultAsync(x => x.Id == id);
             var model = _mapper.Map<CustomerModel>(entity);
             await _dbRepository.SaveChangesAsync();
             return model;

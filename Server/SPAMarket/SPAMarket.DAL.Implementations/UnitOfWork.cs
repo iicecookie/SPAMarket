@@ -1,46 +1,73 @@
-﻿using SPAMarket.DAL.Contracts;
-using SPAMarket.DAL.Implementations.Repositories;
+﻿using SPAMarket.DAL.Implementations.SpecificRepositoryes;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SPAMarket.DAL.Implementations
 {
     public class UnitOfWork : IDisposable
     {
-        private DataContext context = new DataContext();
-        private IDbRepository departmentRepository;
+        private DataContext _context = new DataContext();
+        private OrderItemRepository _orderItemRepository;
+        private CustomerRepository  _customerRepository;
+        private ProductRepository   _productRepository;
+        private OrderRepository     _orderRepository;
 
-        public IDbRepository DepartmentRepository
+        public OrderItemRepository OrderItems
         {
             get
             {
+                if (_orderItemRepository == null)
+                    _orderItemRepository = new OrderItemRepository(_context);
+                return _orderItemRepository;
+            }
+        }
 
-                if (this.departmentRepository == null)
-                {
-                    this.departmentRepository = new DbRepository(context);
-                }
-                return departmentRepository;
+        public OrderRepository Orders
+        {
+            get
+            {
+                if (_orderRepository == null)
+                    _orderRepository = new OrderRepository(_context);
+                return _orderRepository;
+            }
+        }
+
+        public CustomerRepository Customers
+        {
+            get
+            {
+                if (_customerRepository == null)
+                    _customerRepository = new CustomerRepository(_context);
+                return _customerRepository;
+            }
+        }
+
+        public ProductRepository Products
+        {
+            get
+            {
+                if (_productRepository == null)
+                    _productRepository = new ProductRepository(_context);
+                return _productRepository;
             }
         }
 
         public void Save()
         {
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         private bool disposed = false;
 
-        protected virtual void Dispose(bool disposing)
+        public virtual void Dispose(bool disposing)
         {
             if (!this.disposed)
             {
                 if (disposing)
                 {
-                    context.Dispose();
+                    _context.Dispose();
                 }
+                this.disposed = true;
             }
-            this.disposed = true;
         }
 
         public void Dispose()

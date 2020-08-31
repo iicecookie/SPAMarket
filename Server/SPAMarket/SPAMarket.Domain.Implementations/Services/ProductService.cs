@@ -8,15 +8,16 @@ using SPAMarket.DAL.Contracts.Entities;
 using SPAMarket.DAL.Contracts;
 using SPAMarket.Domain.Contracts;
 using SPAMarket.Domain.Contracts.Models;
+using SPAMarket.DAL.Implementations.SpecificRepositoryes;
 
 namespace SPAMarket.Domain.Implementations.Services
 {
     public class ProductService : IProductService
     {
-        private readonly IDbRepository _dbRepository;
+        private readonly ProductRepository _dbRepository;
         private readonly IMapper _mapper;
 
-        public ProductService(IDbRepository dbRepository, IMapper mapper)
+        public ProductService(ProductRepository dbRepository, IMapper mapper)
         {
             _dbRepository = dbRepository;
             _mapper = mapper;
@@ -32,7 +33,7 @@ namespace SPAMarket.Domain.Implementations.Services
 
         public ProductModel Get(Guid id)
         {
-            var entity = _dbRepository.Get<ProductEntity>().FirstOrDefault(x => x.Id == id);
+            var entity = _dbRepository.Get().FirstOrDefault(x => x.Id == id);
             var model = _mapper.Map<ProductModel>(entity);
 
             return model;
@@ -41,7 +42,7 @@ namespace SPAMarket.Domain.Implementations.Services
         // Заказчик просматривает все имеющиеся товары  
         public List<ProductModel> GetAll()
         {
-            var collection = _dbRepository.GetAll<ProductEntity>();
+            var collection = _dbRepository.GetAll();
             var result = _mapper.Map<List<ProductModel>>(collection);
 
             if (result == null || !result.Any())
@@ -64,7 +65,7 @@ namespace SPAMarket.Domain.Implementations.Services
 
         public async Task Delete(Guid id)
         {
-            await _dbRepository.Delete<ProductEntity>(id);
+            await _dbRepository.Delete(id);
             await _dbRepository.SaveChangesAsync();
         }
     }

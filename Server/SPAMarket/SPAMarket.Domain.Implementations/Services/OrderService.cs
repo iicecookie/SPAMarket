@@ -8,15 +8,17 @@ using SPAMarket.DAL.Contracts.Entities;
 using SPAMarket.DAL.Contracts;
 using SPAMarket.Domain.Contracts;
 using SPAMarket.Domain.Contracts.Models;
+using SPAMarket.DAL.Implementations.SpecificRepositoryes;
+using SPAMarket.DAL.Implementations;
 
 namespace SPAMarket.Domain.Implementations.Services
 {
     public class OrderService : IOrderService
     {
-        private readonly IDbRepository _dbRepository;
+        private readonly OrderRepository _dbRepository;
         private readonly IMapper _mapper;
 
-        public OrderService(IDbRepository dbRepository, IMapper mapper)
+        public OrderService(OrderRepository dbRepository, IMapper mapper)
         {
             _dbRepository = dbRepository;
             _mapper = mapper;
@@ -25,14 +27,14 @@ namespace SPAMarket.Domain.Implementations.Services
         public async Task<Guid> Create(List<OrderItemModel> orderItems)
         {
             var entity = _mapper.Map<List<OrderItemEntity>>(orderItems);
-            await _dbRepository.AddRange(entity);
+            await new UnitOfWork().OrderItems.AddRange(entity);
 
             var order = new OrderModel()
             {
                 Status = "New",
                 OrderItems = orderItems,
                 CustomerId = Guid.NewGuid(), // TODO:
-                OrderNumber = _dbRepository.GetAll<OrderEntity>().Count(),
+                OrderNumber = _dbRepository.GetAll().Count(),
                 OrderDate = DateTime.Now,
             };
 
@@ -43,7 +45,7 @@ namespace SPAMarket.Domain.Implementations.Services
 
         public OrderModel Get(Guid id)
         {
-            var entity = _dbRepository.Get<OrderEntity>().FirstOrDefault(x => x.Id == id);
+            var entity = _dbRepository.Get().FirstOrDefault(x => x.Id == id);
             var model = _mapper.Map<OrderModel>(entity);
 
             return model;
@@ -51,7 +53,7 @@ namespace SPAMarket.Domain.Implementations.Services
 
         public List<OrderModel> GetAll()
         {
-            var collection = _dbRepository.GetAll<OrderEntity>().Include(x => x.Customer).ToList();
+            var collection = _dbRepository.GetAll().Include(x => x.Customer).ToList();
             var models = _mapper.Map<List<OrderModel>>(collection);
 
             return models;
@@ -72,7 +74,7 @@ namespace SPAMarket.Domain.Implementations.Services
             var model = Get(id);
             if (model.Status != "In progress")
             {
-                await _dbRepository.Delete<ProductEntity>(id);
+                await new UnitOfWork().Products.Delete(id);
                 await _dbRepository.SaveChangesAsync();
                 return true;
             }

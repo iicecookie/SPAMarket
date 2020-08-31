@@ -17,7 +17,7 @@ using Microsoft.OpenApi.Models;
 using SPAMarket.DAL.Contracts;
 using SPAMarket.DAL.Contracts.Entities;
 using SPAMarket.DAL.Implementations;
-using SPAMarket.DAL.Implementations.Repositories;
+using SPAMarket.DAL.Implementations.SpecificRepositoryes;
 using SPAMarket.Domain.Contracts;
 using SPAMarket.Domain.Implementations.Services;
 
@@ -56,13 +56,22 @@ namespace SPAMarket
           
             services.AddAutoMapper(typeof(Startup));
           
-            services.AddScoped<IDbRepository, DbRepository>();
-            
+            services.AddScoped<DbContext, DbContext>();
+
+            services.AddScoped<OrderItemRepository, OrderItemRepository>();
+            services.AddScoped<CustomerRepository,  CustomerRepository>();
+            services.AddScoped<ProductRepository,   ProductRepository>();
+            services.AddScoped<OrderRepository,     OrderRepository>();
+
+            // services.AddScoped<CustomerService, CustomerService>();
+            // services.AddScoped<ProductService,  ProductService>();
+            // services.AddScoped<OrderService,    OrderService>();
+
             services.AddTransient<ICustomerService,  CustomerService>();
             services.AddTransient<IOrderService,     OrderService>();
             services.AddTransient<IProductService,   ProductService>();
 
-            services.AddSingleton(new UserEntity { Id = Guid.Empty });
+            // services.AddSingleton(new UserEntity { Id = Guid.Empty });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
